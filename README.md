@@ -1,7 +1,7 @@
-##Apache Nifi Custom SMPP Processor
+# Apache Nifi Custom SMPP Processor
 
-###Problem faced  <br>
-We were trying to read data from an internal system supportin only SMPP protocal unfortunatly , Apache Nifi doesn't by <br> 
+##### Problem faced  <br>
+We were trying to read data from an internal system supporting only SMPP protocal unfortunately, Apache Nifi doesn't by <br> 
 default ship with any SMPP client processor. <br>
 
 Tasks 
@@ -10,4 +10,4 @@ Tasks
 - Meet minimum TPS of >=8000
 
 
-###Solution 
+##### Solution
