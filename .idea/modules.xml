@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/nifi-smpp-nar/nifi-smpp-nar.iml" filepath="$PROJECT_DIR$/nifi-smpp-nar/nifi-smpp-nar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nifi-smpp-processors/nifi-smpp-processors.iml" filepath="$PROJECT_DIR$/nifi-smpp-processors/nifi-smpp-processors.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smpp-processor.iml" filepath="$PROJECT_DIR$/smpp-processor.iml" />
+    </modules>
+  </component>
+</project>
