@@ -7,7 +7,7 @@ default ship with any SMPP client processor. <br>
 Tasks 
 - Building processor that can connect via SMPP protocal 
 - Package the data as JSON
-- Meet minimum TPS of >=8000
+- TPS of >=8000
 
 
 ##### Solution
