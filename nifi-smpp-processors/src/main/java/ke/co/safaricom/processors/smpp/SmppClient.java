@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Set;
 
 @Tags({"smpp client", "smpp" , " smpp processor"})
-@CapabilityDescription("Smpp client is used to g")
+@CapabilityDescription("Smpp client for receiving messages from SMSC")
 @SeeAlso({})
 @ReadsAttributes({@ReadsAttribute(attribute="", description="")})
 @WritesAttributes({@WritesAttribute(attribute="", description="")})
