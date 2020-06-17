@@ -11,3 +11,10 @@ Tasks
 
 
 ##### Solution
+We are thinking of having the processor having capabilities of 
+- handling of executors
+- handling of multiple threads (and cleanups)
+- handling of rebind in case of lost connection
+- handling of enquire_link to keep connection alive in periods of inactivity
+- handling of queuing and windowing for async messaging.
+
