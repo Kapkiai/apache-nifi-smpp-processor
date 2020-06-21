@@ -1,26 +1,44 @@
 package ke.co.safaricom.processors.smpp.smpp;
 
-import ke.co.safaricom.processors.smpp.esmsc.CreateSMPPSession;
-import ke.co.safaricom.processors.smpp.esmsc.RecieveSms;
-import ke.co.safaricom.processors.smpp.esmsc.SendMessages;
-import org.junit.Before;
+import ke.co.safaricom.processors.smpp.connectionparams.ConnectionObj;
+import ke.co.safaricom.processors.smpp.logger.Logging;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class TestSMPPClientConnection {
-    public static SendMessages sendMessage;
-    public static CreateSMPPSession session;
 
+    public static CreateSmppSession smppSession;
+    public static ConnectionObj conParams;
+    public static Logging logging;
+    public static ProcessMessages processMessages;
+
+    private String host= "smscsim.melroselabs.com";
+    private int port = 2775;
+    private String systemid="277361";
+    private String password= "PQPXWD";
+    private String destinationSdrr="99277361";
+    private String sourceAddr="MelroseLabs";//"00277361";
+    private String systemType = "smpp";
 
     @BeforeAll
     static void setup(){
-        session = new CreateSMPPSession();
-        sendMessage =new SendMessages(session);
+
+        conParams = new ConnectionObj();
+        logging = new Logging(CreateSmppSession.class);
+        processMessages = new ProcessMessages(logging);
     }
 
     @Test
     void TestConnectionToSMSC(){
-        sendMessage.sendPeerToPeer();
+
+        conParams.setHost(host);
+        conParams.setPort(port);
+        conParams.setPassword(password);
+        conParams.setSystemType(systemType);
+        conParams.setAddressRange(null);
+        conParams.setSystemid(systemid);
+        smppSession = new CreateSmppSession(conParams,logging);
+        smppSession.create();
     }
 
 }
