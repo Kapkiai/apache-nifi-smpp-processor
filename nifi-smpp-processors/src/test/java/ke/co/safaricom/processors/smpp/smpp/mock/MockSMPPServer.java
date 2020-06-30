@@ -1,15 +1,14 @@
 package ke.co.safaricom.processors.smpp.smpp.mock;
 
-import ke.co.safaricom.processors.smpp.SmppClient;
+import ke.co.safaricom.processors.smpp.GetSmpp;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class MockSMPPServer {
     @Mock
-    SmppClient mockClient = mock(SmppClient.class);
+    GetSmpp mockClient = mock(GetSmpp.class);
 
    @Test
     void testShouldSendSms(){

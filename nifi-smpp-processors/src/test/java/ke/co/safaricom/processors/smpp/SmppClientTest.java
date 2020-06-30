@@ -28,7 +28,7 @@ public class SmppClientTest {
 
     @Before
     public void init() {
-        testRunner = TestRunners.newTestRunner(SmppClient.class);
+        testRunner = TestRunners.newTestRunner(GetSmpp.class);
     }
 
     @Test

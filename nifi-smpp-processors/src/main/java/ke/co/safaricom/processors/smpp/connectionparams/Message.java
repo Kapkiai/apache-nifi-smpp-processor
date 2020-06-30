@@ -1,24 +1,19 @@
 package ke.co.safaricom.processors.smpp.connectionparams;
 
 
+import org.jsmpp.bean.DeliverSm;
 
 public class Message {
     private String msgSource;
     private String msgDestination;
     private String msgContent;
 
-    public void setMsgSource(String msgSource) {
-        this.msgSource = msgSource;
-    }
+    public Message(DeliverSm deliverSm){
+        this.msgContent= new String(deliverSm.getShortMessage());
+        this.msgSource=deliverSm.getSourceAddr();
+        this.msgDestination=deliverSm.getDestAddress();
 
-    public void setMsgDestination(String msgDestination) {
-        this.msgDestination = msgDestination;
     }
-
-    public void setMsgContent(String msgContent) {
-        this.msgContent = msgContent;
-    }
-
     public String getMsgSource() {
         return msgSource;
     }
@@ -38,4 +33,3 @@ public class Message {
                 "}";
     }
 }
-

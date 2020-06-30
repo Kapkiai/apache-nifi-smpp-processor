@@ -1,5 +1,6 @@
 package ke.co.safaricom.processors.smpp.smpp;
 
+import ke.co.safaricom.processors.smpp.connectionparams.Buffer;
 import ke.co.safaricom.processors.smpp.connectionparams.Message;
 import ke.co.safaricom.processors.smpp.logger.Logging;
 import org.jsmpp.SMPPConstant;
@@ -11,22 +12,25 @@ import org.jsmpp.session.SMPPSession;
 import org.jsmpp.session.Session;
 import org.jsmpp.util.InvalidDeliveryReceiptException;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.*;
+import java.util.function.Supplier;
 
 public class RecieveSms implements MessageReceiverListener {
     private CreateSmppSession smppSession;
     private Logging logging;
     private static final String DATASM_NOT_IMPLEMENTED= "data_sm not implemented";
-    private Message msgObj = null;
-    ExecutorService pool = Executors.newFixedThreadPool(10);
+    //ExecutorService pool = Executors.newFixedThreadPool(10);
+    Buffer buffer ;
+    ExecutorService pool = Executors.newCachedThreadPool();
 
 
 
-    public RecieveSms(CreateSmppSession session, Logging logging){
+    public RecieveSms(CreateSmppSession session, Logging logging,Buffer buffer){
         this.smppSession=smppSession;
         this.logging=logging;
-        this.msgObj = new Message();
-
+        this.buffer=buffer;
 
     }
 
@@ -36,29 +40,36 @@ public class RecieveSms implements MessageReceiverListener {
             //This is a delivery recipt
 
         }else{
-            msgObj.setMsgContent(new String(deliverSm.getShortMessage()));
-            msgObj.setMsgSource(deliverSm.getSourceAddr());
-            msgObj.setMsgDestination(deliverSm.getDestAddress());
+            logging.info("\"Recieving SMS \"" + ", " + new String(deliverSm.getShortMessage()));
+            logging.info("Starting  thread ...  ");
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss.SSS");
+            logging.info("Initialization time for task " + df.format(date));
 
-            // This is a normal short message
-            logging.info("\" Recieving SMS \"" + ", " + msgObj.toJsonString());
-            Future<String > msgResult = pool.submit(new ProcessMessages(deliverSm));
+            CompletableFuture<String> msgJsonFuture = CompletableFuture.supplyAsync(new Supplier<String>() {
+                @Override
+                public String get() {
+                    Message serializeMsg= new Message(deliverSm);
+                    return serializeMsg.toJsonString();
+                }
+            },pool);
+
+            CompletableFuture<String> resultJsonFuture = msgJsonFuture.thenApply(jsonResult ->{
+                logging.info("we have received Result json  :  \n " + jsonResult);
+                return jsonResult;
+            });
 
             try {
-                String msgJson = msgResult.get(10, TimeUnit.MILLISECONDS);
-                logging.info(" Data returned " + msgJson);
+                buffer.put(resultJsonFuture.get());
+
+                // logging.info(" We have the result finally ...  \n  " + resultJsonFuture.get());
             } catch (InterruptedException e) {
-                logging.error("Thread pool interruption : " + e);
-                msgResult.cancel(true);
+                logging.error("Interrupted Exception : " + e);
             } catch (ExecutionException e) {
-                logging.error("Thread pool Execution Exception : " + e);
-                msgResult.cancel(true);
-            } catch (TimeoutException e) {
-                logging.error("Thread pool Timeout Exception : " + e);
-
+                logging.error("Execution Exception : " + e);
             }
-
-
+            logging.info("End of task time  " + df.format(date));
+            logging.info("Thread Completed");
         }
 
     }

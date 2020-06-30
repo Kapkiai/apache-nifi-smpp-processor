@@ -1,0 +1,35 @@
+// ------------------------------------------------------------------
+// Transitive dependencies of this project determined from the
+// maven pom organized by organization.
+// ------------------------------------------------------------------
+
+nifi-smpp-nar
+
+
+From: 'an unknown organization'
+  - jSMPP - Core (http://jsmpp.org/jsmpp) org.jsmpp:jsmpp:bundle:2.3.9
+    License: Apache License v2  (http://apache.org/licenses/LICENSE-2.0)
+  - jSMPP - Parent (http://jsmpp.org) org.jsmpp:jsmpp-pom:pom:2.3.9
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'Apache NiFi Project' (https://nifi.apache.org/)
+  - nifi-smpp-processors (https://nifi.apache.org/nifi-nar-bundles/smpp-processor/nifi-smpp-processors) ke.co.safaricom:nifi-smpp-processors:jar:1.0-SNAPSHOT
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+  - nifi-utils (https://nifi.apache.org/nifi-commons/nifi-utils) org.apache.nifi:nifi-utils:jar:1.10.0
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+
+From: 'The Apache Software Foundation' (https://www.apache.org/)
+  - Camel :: API (https://www.apache.org/camel/camel-parent/core/camel-api/) org.apache.camel:camel-api:jar:3.3.0
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Camel :: Management API (https://www.apache.org/camel/camel-parent/core/camel-management-api/) org.apache.camel:camel-management-api:jar:3.3.0
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Camel :: SMPP (https://www.apache.org/camel/camel-parent/components/camel-smpp/) org.apache.camel:camel-smpp:jar:3.3.0
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Camel :: Support (https://www.apache.org/camel/camel-parent/core/camel-support/) org.apache.camel:camel-support:jar:3.3.0
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Camel :: Util (https://www.apache.org/camel/camel-parent/core/camel-util/) org.apache.camel:camel-util:jar:3.3.0
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+
+
+

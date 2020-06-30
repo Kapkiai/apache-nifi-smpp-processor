@@ -1,5 +1,6 @@
 package ke.co.safaricom.processors.smpp.smpp;
 
+import ke.co.safaricom.processors.smpp.connectionparams.Buffer;
 import ke.co.safaricom.processors.smpp.connectionparams.ConnectionObj;
 import ke.co.safaricom.processors.smpp.logger.Logging;
 import org.jsmpp.bean.BindType;
@@ -20,10 +21,12 @@ public class CreateSmppSession {
     private SMPPSession session = null;
     private ConnectionObj conParams;
     private Logging logging;
+    private Buffer buffer;
 
-    public CreateSmppSession(ConnectionObj conParams, Logging logging){
+    public CreateSmppSession(ConnectionObj conParams, Logging logging,Buffer buffer){
         this.conParams=conParams;
         this.logging=logging;
+        this.buffer=buffer;
     }
     public SMPPSession getExistingSession(){
         return session;
@@ -33,7 +36,7 @@ public class CreateSmppSession {
         SMPPSession session =new SMPPSession();
         session.setEnquireLinkTimer(30000);
         session.setTransactionTimer(2000);
-        session.setMessageReceiverListener(new RecieveSms(this,logging));
+        session.setMessageReceiverListener(new RecieveSms(this,logging,buffer));
         session.addSessionStateListener(new StateChange(this,logging));
         logging.info("Creating a session");
         return session;

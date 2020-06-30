@@ -1,0 +1,3 @@
+ke\co\safaricom\processors\smpp\SmppClientTest.class
+ke\co\safaricom\processors\smpp\smpp\TestSMPPClientConnection.class
+ke\co\safaricom\processors\smpp\smpp\mock\MockSMPPServer.class

@@ -10,7 +10,7 @@ public class TestSMPPClientConnection {
     public static CreateSmppSession smppSession;
     public static ConnectionObj conParams;
     public static Logging logging;
-    public static ProcessMessages processMessages;
+
 
     private String host= "smscsim.melroselabs.com";
     private int port = 2775;
@@ -24,8 +24,8 @@ public class TestSMPPClientConnection {
     static void setup(){
 
         conParams = new ConnectionObj();
-        logging = new Logging(CreateSmppSession.class);
-        processMessages = new ProcessMessages(logging);
+        //logging = new Logging(this.getLogger());
+
     }
 
     @Test
@@ -37,8 +37,8 @@ public class TestSMPPClientConnection {
         conParams.setSystemType(systemType);
         conParams.setAddressRange(null);
         conParams.setSystemid(systemid);
-        smppSession = new CreateSmppSession(conParams,logging);
-        smppSession.create();
+        //smppSession = new CreateSmppSession(conParams,logging);
+        //smppSession.create();
     }
 
 }
