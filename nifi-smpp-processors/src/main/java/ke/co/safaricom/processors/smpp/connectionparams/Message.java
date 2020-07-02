@@ -3,6 +3,9 @@ package ke.co.safaricom.processors.smpp.connectionparams;
 
 import org.jsmpp.bean.DeliverSm;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Message {
     private String msgSource;
     private String msgDestination;
@@ -18,6 +21,12 @@ public class Message {
         return msgSource;
     }
 
+    public String getDate() {
+        Date date = new Date();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        return df.format(date);
+    }
+
     public String getMsgDestination() {
         return msgDestination;
     }
@@ -27,7 +36,8 @@ public class Message {
     }
 
     public String toJsonString (){
-        return "{\"source\":\""+ getMsgSource() +"\"," +
+        return "{\"timestamp \":\""+ getDate() + "\"," +
+                "\"source\":\""+ getMsgSource() +"\"," +
                 " \"recipient\":\"" + getMsgDestination() + "\", " +
                 " \"message\":\"" + getMsgContent() +"\"" +
                 "}";

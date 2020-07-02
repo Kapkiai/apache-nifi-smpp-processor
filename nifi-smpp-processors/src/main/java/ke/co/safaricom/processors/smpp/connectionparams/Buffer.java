@@ -15,12 +15,12 @@ public class Buffer {
     }
 
     public void put(String serializedMsg){
-        logger.info("Adding element to Queue " + serializedMsg);
+
         msgQueue.add(serializedMsg);
     }
     public String get(){
         String msg =msgQueue.poll();
-        logger.info("Dequeuing  " + msg);
+        logger.info("Dequeuing  Messages of size " + msg.length());
         return msg;
     }
 

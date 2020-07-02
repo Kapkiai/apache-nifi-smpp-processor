@@ -20,7 +20,9 @@ import ke.co.safaricom.processors.smpp.connectionparams.Buffer;
 import ke.co.safaricom.processors.smpp.connectionparams.ConnectionObj;
 import ke.co.safaricom.processors.smpp.logger.Logging;
 import ke.co.safaricom.processors.smpp.smpp.CreateSmppSession;
+import org.apache.nifi.annotation.lifecycle.OnShutdown;
 import org.apache.nifi.annotation.lifecycle.OnStopped;
+import org.apache.nifi.annotation.lifecycle.OnUnscheduled;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.annotation.behavior.ReadsAttribute;
 import org.apache.nifi.annotation.behavior.ReadsAttributes;
@@ -42,11 +44,9 @@ import org.jsmpp.session.SMPPSession;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+import org.json.JSONObject;
 
 @Tags({"smpp client", "smpp" , " smpp processor"})
 @CapabilityDescription("Smpp client for receiving messages from SMSC")
@@ -59,7 +59,7 @@ public class GetSmpp extends AbstractProcessor {
     public static final PropertyDescriptor PROP_SMSC_HOST = new PropertyDescriptor
             .Builder().name("SMSC host")
             .displayName("Host")
-            .description("SMSC host ips to bind with")
+            .description("smsc hosts to bind to")
             .required(true)
             .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
             .build();
@@ -111,12 +111,12 @@ public class GetSmpp extends AbstractProcessor {
             .build();
 
     public static final Relationship REL_SUCCESS = new Relationship.Builder()
-            .name("Success")
+            .name("success")
             .description("Successfully started receiving data from SMSC")
             .build();
 
     public static final Relationship REL_FAIL = new Relationship.Builder()
-            .name("Failure")
+            .name("failure")
             .description("Failed to bind or receive data")
             .build();
 
@@ -172,6 +172,7 @@ public class GetSmpp extends AbstractProcessor {
 
 
 
+
     private void startSessionAndBind(
             String host,int port, String password,String addressRange,String systemType,String systemid
     ){
@@ -192,22 +193,49 @@ public class GetSmpp extends AbstractProcessor {
             smppSession=new CreateSmppSession(connectionParams,logger,buffer);
          }
 
-        newSmppSession =smppSession.getExistingSession();
+        newSmppSession=smppSession.getExistingSession();
         if(newSmppSession ==null){
             smppSession.create();
         }
     }
 
-
+    @OnUnscheduled
+    public void unScheduled(){
+        // Close and unbind the connections
+        try {
+            if(smppSession.getExistingSession()!=null){
+                smppSession.closeSession();
+            }
+            logger.info("Closing and Unbinding Connection OnUnscheduled");
+        } catch (IOException e) {
+            logger.error("Error Closing and Unbinding Connection" + e );
+        }
+    }
     @OnStopped
     public void stop() {
         // Close and unbind the connections
         try {
-            smppSession.closeSession();
+            if(smppSession.getExistingSession()!=null){
+                smppSession.closeSession();
+            }
+            logger.info("Closing and Unbinding Connection OnStopped");
         } catch (IOException e) {
-            logger.info("Closing and Unbinding Connection");
+            logger.error("Error Closing and Unbinding Connection" + e );
         }
     }
+    @OnShutdown
+    public void shutdown(){
+        try {
+            if(smppSession.getExistingSession()!=null){
+                smppSession.closeSession();
+            }
+            logger.info("Closing and Unbinding Connection OnShutdown");
+        } catch (IOException e) {
+            logger.error("Error Closing and Unbinding Connection" + e );
+
+        }
+    }
+
 
     @Override
     public void onTrigger(final ProcessContext context, final ProcessSession session) throws ProcessException {
@@ -222,21 +250,21 @@ public class GetSmpp extends AbstractProcessor {
         String addressRange = context.getProperty(PROP_SMSC_ADDRESS_RANGE).getValue();
         String systemid = context.getProperty(PROP_SMSC_SYSTEM_ID).getValue();
 
-
         startSessionAndBind(host,port,password,addressRange,systemType,systemid);
-        logger.info("Checking buffer.check() :  " + buffer.check());
+
+
+        logger.info("Checking for newly queued data ... " );
         while(buffer.check()!=null){
             msgFlowFile=session.create();
             String msgJson=buffer.get();
-            logger.info("Processor getting records :  " + msgJson);
-
+            logger.info("Writting data to a flowfile  ... " );
             try{
                 msgFlowFile=session.write(msgFlowFile,outputStream->{
                   outputStream.write(msgJson.getBytes(StandardCharsets.UTF_8));
                 });
 
-
             }catch (ProcessException e){
+                session.transfer(msgFlowFile,REL_FAIL);
                 logger.error("\"Process Exception {}\"," + e );
             }
             session.transfer(msgFlowFile,REL_SUCCESS);

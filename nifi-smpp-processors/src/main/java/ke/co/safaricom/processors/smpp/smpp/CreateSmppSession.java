@@ -45,12 +45,12 @@ public class CreateSmppSession {
     private SMPPSession getSession() throws IOException{
         if(session==null){
             session=initSession() ;
-            logging.info("\"Initiate session for the first time session to {}:{} \"" + " , "+ conParams.getHost()+"," +conParams.getPort());
-
+            logging.info("Initiate session for the first time session to {}:{} " + " , "+ conParams.getHost()+"," +conParams.getPort());
+            return session;
         }else if(session.getSessionState().isBound()){
-            logging.error("We have no session yet");
+            logging.info("No session yet ");
         }
-        return session;
+        return null;
     }
 
 
@@ -60,33 +60,37 @@ public class CreateSmppSession {
         } catch (IOException e) {
 
         }
-        try {
-            session.connectAndBind(
-                    conParams.getHost(),
-                    conParams.getPort(),
-                    new BindParameter(BindType.BIND_RX, conParams.getSystemid(),
-                            conParams.getPassword(), conParams.getSystemType(), TypeOfNumber.UNKNOWN, NumberingPlanIndicator.UNKNOWN,
-                            conParams.getAddressRange())
-            );
-            logging.info("\"Connected with SMPP with system id {}\"" + "," + session.getSessionId());
-            return session;
+         try {
+             if(!session.getSessionState().isBound()){
+                session.connectAndBind(
+                        conParams.getHost(),
+                        conParams.getPort(),
+                        new BindParameter(BindType.BIND_RX, conParams.getSystemid(),
+                                conParams.getPassword(), conParams.getSystemType(), TypeOfNumber.UNKNOWN, NumberingPlanIndicator.UNKNOWN,
+                                conParams.getAddressRange()));
 
-        } catch (IOException e) {
-            logging.error("\"I/O Error occured \"" +","+ e);
-            try {
-                closeSession();
-            } catch (IOException ioException) {
-                logging.error("Error closing the session");
+                 logging.info("Connected with SMPP with system id {} " + "," + session.getSessionId());
+
+               }
+                return session;
+
+            } catch (IOException e) {
+                logging.error("I/O Error occured " + "," + e);
+                try {
+                    closeSession();
+                } catch (IOException ioException) {
+                    logging.error("Error closing the session");
+                }
+                return null;
             }
-            return null;
+
         }
 
-    }
-
     public void closeSession() throws IOException {
-        if(getSession()!=null){
+        if(session!=null){
             logging.info("Closing existing session  ...");
-            getSession().unbindAndClose();
+            session.unbindAndClose();
+            //getSession().unbindAndClose();
         }
     }
 

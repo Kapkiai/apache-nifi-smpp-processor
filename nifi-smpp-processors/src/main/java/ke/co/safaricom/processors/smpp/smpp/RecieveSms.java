@@ -40,12 +40,11 @@ public class RecieveSms implements MessageReceiverListener {
             //This is a delivery recipt
 
         }else{
-            logging.info("\"Recieving SMS \"" + ", " + new String(deliverSm.getShortMessage()));
             logging.info("Starting  thread ...  ");
             Date date = new Date();
             SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss.SSS");
-            logging.info("Initialization time for task " + df.format(date));
-
+            logging.info("Task Initialization time  " + df.format(date));
+            logging.info("Notifications Streaming in ... " );
             CompletableFuture<String> msgJsonFuture = CompletableFuture.supplyAsync(new Supplier<String>() {
                 @Override
                 public String get() {
@@ -55,21 +54,20 @@ public class RecieveSms implements MessageReceiverListener {
             },pool);
 
             CompletableFuture<String> resultJsonFuture = msgJsonFuture.thenApply(jsonResult ->{
-                logging.info("we have received Result json  :  \n " + jsonResult);
-                return jsonResult;
+                logging.info("Data Recieving Streaming in ... " + jsonResult.length());
+              return jsonResult;
             });
 
             try {
                 buffer.put(resultJsonFuture.get());
 
-                // logging.info(" We have the result finally ...  \n  " + resultJsonFuture.get());
             } catch (InterruptedException e) {
                 logging.error("Interrupted Exception : " + e);
             } catch (ExecutionException e) {
                 logging.error("Execution Exception : " + e);
             }
             logging.info("End of task time  " + df.format(date));
-            logging.info("Thread Completed");
+            logging.info( "Thread Completed");
         }
 
     }
