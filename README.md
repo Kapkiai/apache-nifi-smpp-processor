@@ -33,4 +33,4 @@ We are thinking of having the processor having capabilities of
             they will be routed to failed cache and succesfull  transactions (For audit purposes) on cassandra with TTL of 24hrs for successful cached payload
   - Persistance :  Write to  Kafka topics layer
   
-  ![Overall_pipeline](./images/nifi_overrall_triggers_pipeline.PNG)
+  ![Overall_pipeline](./images/nifi_overrall_triggers_pipeline_LI.jpg)
