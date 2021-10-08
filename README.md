@@ -1,7 +1,7 @@
 # Apache Nifi Custom SMPP Processor
 
 ##### Problem faced  <br>
-We were trying to read data from an internal system supporting only SMPP protocal unfortunately, Apache Nifi doesn't by <br> 
+We were trying to read data from an internal system supporting only SMPP protocal unfortunately, Apache Nifi doesn't by 
 default ship with any SMPP client processor. <br>
 
 Tasks 
