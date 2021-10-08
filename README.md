@@ -21,7 +21,7 @@ We are thinking of having the processor having capabilities of
 ##### How the solution integrated to the overall nifi pipeline
 
 ###### The Nifi custom Processor 
-![Custom Proccessor](./images/nifi_binding_processor.PNG)
+![Custom Proccessor](./images/nifi_binding_processor_LI.jpg)
 ###### How the Nifi custom Processor fits in the pipeline - Binding layer
 ![Binding layer](./images/nifi_binding_processor_layer.PNG)
 
